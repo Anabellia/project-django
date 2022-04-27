@@ -2,6 +2,12 @@ from django.db import models
 
 # Create your models here.
 
+
+class User(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+
+
 class Todo(models.Model):
     URGENT_PRIORITY = 'U'
     HIGH_PRIORITY = 'H'
@@ -20,3 +26,4 @@ class Todo(models.Model):
         choices=TASK_PRIORITY_CHOICES,
         default=MEDIUM_PRIORITY,
     )
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
