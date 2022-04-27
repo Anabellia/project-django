@@ -26,4 +26,4 @@ class Todo(models.Model):
         choices=TASK_PRIORITY_CHOICES,
         default=MEDIUM_PRIORITY,
     )
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
