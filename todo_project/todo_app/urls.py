@@ -3,5 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name="home"),
-    path('users/<int:id>', views.UserAPIView.as_view()),
+    path('users/', views.UserViewSet.as_view({'get': 'retrieve'})),
 ]
