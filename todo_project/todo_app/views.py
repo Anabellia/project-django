@@ -12,7 +12,6 @@ class HomeView(APIView):
 
 
 class UserAPIView(APIView):
-    serializer_user = UserSerializer
 
     def get_object(self):
         users = User.objects.all()
