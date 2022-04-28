@@ -1,9 +1,18 @@
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.shortcuts import render
 from .serializers import UserSerializer
 from todo_app.models import User
+
+
+class IdUserAPIView(APIView):
+
+    def get(self, request, my_id, *args, **kwargs):
+        user = User.objects.get(id=my_id)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 class UserViewSet(viewsets.ViewSet):
