@@ -11,14 +11,14 @@ from rest_framework.permissions import IsAuthenticated
 
 class UserAPI(APIView):
     permission_classes = [IsAuthenticated]
-    serizalizer_class = UserAPISerializer
+    serizalizer_class = UserSerializer
 
     def get_object(self):
         return self.request.user
 
     def get(self, request, *args, **kwargs):
         user = self.get_object()
-        serializer = UserAPISerializer(user)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
 
 
