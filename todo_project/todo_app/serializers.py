@@ -1,6 +1,6 @@
 from dataclasses import fields
 from rest_framework import serializers
-from todo_app.models import MyUser
+from todo_app.models import MyUser, NameUser
 from django.contrib.auth.models import User
 
 
@@ -15,3 +15,9 @@ class UserAPISerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+
+class NameUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model: NameUser
+        fields = ('name')
