@@ -25,9 +25,12 @@ class UserAPI(APIView):
 class IdUserAPIView(APIView):
 
     def get(self, request, my_id, *args, **kwargs):
-        user = MyUser.objects.get(id=my_id)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+        if self.request.user.is_superuser:
+            user = MyUser.objects.get(id=my_id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        else:
+            return Response({"Error Admin": "You don't have permission to see this page"})
 
 
 class UserViewSet(viewsets.ViewSet):
