@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from django.shortcuts import render
 from .serializers import UserSerializer, UserAPISerializer, NameUserSerializer
-from todo_app.models import MyUser, NameUser
+from todo_app.models import MyUser, NameFieldForUser
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, IsAdminUser, BasePermission
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 
@@ -22,8 +22,11 @@ class UserReadPermission(BasePermission):
 
 class UserList(APIView):
     def get(self, request, *args, **kwargs):
-        users = MyUser.objects.all()
-        serializer = UserSerializer(users, many=True)
+        user_list = MyUser.objects.filter(
+            last_name=NameFieldForUser.name) | MyUser.objects.filter(
+                first_name=NameFieldForUser.name)
+        serializer = UserSerializer(user_list, many=True)
+
         return Response(serializer.data)
 
 
