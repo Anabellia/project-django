@@ -2,12 +2,45 @@ from asyncio import run_coroutine_threadsafe
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from django.shortcuts import render
 from .serializers import UserSerializer, UserAPISerializer, NameUserSerializer
 from todo_app.models import MyUser, NameFieldForUser
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, IsAdminUser, BasePermission
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
+
+
+class UserList(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        queryset = MyUser.objects.all()
+        name = self.request.query_params.get('name')
+
+        if name is not None:
+            queryset = queryset.filter(
+                first_name=name) | queryset.filter(
+                last_name=name)
+
+        return queryset
+
+
+# class UserList(generics.ListAPIView):
+#     serializer_class = UserSerializer
+
+#     def get_queryset(self):
+#         queryset = MyUser.objects.all()
+#         first_name = self.request.query_params.get('first_name')
+#         last_name = self.request.query_params.get('last_name')
+
+#         if first_name is not None:
+#             queryset = queryset.filter(
+#                 first_name=first_name)
+#         if last_name is not None:
+#             queryset = queryset.filter(
+#                 last_name=last_name)
+
+#         return queryset
 
 
 class UserReadPermission(BasePermission):
@@ -16,18 +49,7 @@ class UserReadPermission(BasePermission):
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        print("Hello")
         return request.user.is_superuser
-
-
-class UserList(APIView):
-    def get(self, request, *args, **kwargs):
-        user_list = MyUser.objects.filter(
-            last_name=NameFieldForUser.name) | MyUser.objects.filter(
-                first_name=NameFieldForUser.name)
-        serializer = UserSerializer(user_list, many=True)
-
-        return Response(serializer.data)
 
 
 class UserAPI(APIView):
